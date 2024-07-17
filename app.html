@@ -1,1 +1,755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4年2組</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+        
+        body {
+            font-family: 'Kosugi Maru', sans-serif; 
+            background-color: #e0f7fa; 
+            color: #000; 
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
+        .bg {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+            color: #fff;
+            transition: opacity 2s ease;
+            opacity: 1;
+        }
+
+        .bg.-visible:before {
+         transform: translate(0, 0);
+        }
+
+        .bg:before {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #3073aa;
+            transform: translate(0, 100%);
+            transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) .6s;
+            content: '';
+        }
+
+        .title {
+            display: block;
+            color: #fff;
+            font-family: 'Josefin Sans', sans-serif;
+            text-align: center;
+        }
+
+        .title span {
+            display: block;
+            opacity: 0;
+            transition: transform cubic-bezier(0.215, 0.61, 0.355, 1) 1s, opacity linear 0.7s;
+        }
+
+        .title span:first-child {
+            transform: translate(0, 40px);
+            font-size: 20px;
+            transition-delay: 0.25s;
+        }
+
+        .title span:last-child {
+            margin-top: 18px;
+            transform: translate(0, 30px);
+            font-size: 48px;
+            transition-delay: 0.45s;
+        }
+
+        .bg.-visible .title span {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        /****** Base style. ******/
+        body {
+         margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff; /* 白背景 */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            font-family: 'Kosugi Maru', sans-serif; /* UD教科書体の代替として使用 */
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .bbs {
+            align-items: center;
+            background: #b2ebf2; 
+            color: #000;
+            display: flex;
+            height: 40px;
+            line-height: 40px;
+            overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            z-index: 1;
+        }
+        .bbs ul {
+            animation: flowing 20s linear infinite;
+            font-size: 20px;
+            transform: translateX(100%);
+            margin: 0;
+            padding: 0;
+        }
+        .bbs ul li {
+            display: inline-block;
+            padding-right: 10px;
+        }
+        @keyframes flowing {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .weekly-schedule {
+            margin-bottom: 20px;
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+        .schedule-content {
+            display: flex;
+            animation: scroll 20s linear infinite;
+        }
+        .schedule-day {
+            flex: 0 0 auto;
+            width: 200px;
+            margin-right: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff; 
+        }
+        .schedule-day h3 {
+            font-size: 1em;
+            color: #444;
+        }
+        .schedule-day p {
+            font-size: 0.9em;
+            color: #666;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .announcement-container {
+            overflow: hidden;
+            width: 100%;
+            height: 150px;
+            position: relative;
+        }
+        .announcement-scroll {
+            display: flex;
+            animation: scroll 20s linear infinite;
+        }
+        .announcement {
+            flex: 0 0 auto;
+            width: 200px;
+            height: 130px;
+            margin-right: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff; /* 白背景 */
+        }
+        .announcement h3 {
+            margin-top: 0;
+            color: #444;
+        }
+        .announcement p {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .quiz {
+            background-color: white;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .question-container {
+            margin-bottom: 1em;
+        }
+
+        .answers label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 1em;
+            font-weight: bold;
+        }
+        .menu-btn {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 999;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #f1f1f1;
+            transition: 0.3s;
+            padding-top: 60px;
+            z-index: 998;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+
+        .content {
+            margin-left: 0;
+            transition: 0.3s;
+        }
+
+        .content.active {
+            margin-left: 250px;
+        }
+
+        /* 課題提出状況のスタイル */
+        #assignments {
+            padding: 20px;
+        }
+
+        .assignment {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .assignment h3 {
+            margin-top: 0;
+        }
+
+        .assignment button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        /* スケジュール管理のスタイル */
+        #schedule {
+            padding: 20px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .calendar-day.header {
+            font-weight: bold;
+            background-color: #f1f1f1;
+        }
+
+        /* クイズ成績のスタイル */
+        #quiz-results {
+            padding: 20px;
+        }
+
+        .quiz-result {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+
+    
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <span class="title">
+          <span>4-2</span>
+          <span>HOMEPAGE</span>
+        </span>
+    </div>
+    <div class="bg"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery を使う場合、必要に応じて読み込み -->
+    <script>
+        const CLASSNAME = "-visible";
+        const TIMEOUT = 2000;
+        const $target = $(".bg");
+
+        // 一度だけアニメーションを表示
+        setTimeout(() => {
+            $target.addClass(CLASSNAME);
+
+            setTimeout(() => {
+                $target.removeClass(CLASSNAME);
+                $target.css("opacity", "0"); // フェードアウト効果
+                setTimeout(() => {
+                    $target.hide(); // フェードアウト後非表示にする
+                }, 2000); // フェードアウトの時間
+            }, TIMEOUT);
+        }, TIMEOUT);
+    </script>
+    <div class="container">
+        <h1>4年2組</h1>
+        <div class="bbs">
+            <ul>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+            </ul>
+            <ul>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+                <li>2022.04.23 漢字テスト</li>
+            </ul>
+        </div>
+        <button class="menu-btn" onclick="toggleSidebar()">Menu</button>
+        <div class="sidebar" id="sidebar">
+            <a href="#" onclick="showContent('assignments')">課題提出状況</a>
+            <a href="#" onclick="showContent('schedule')">スケジュール管理</a>
+            <a href="#" onclick="showContent('quiz-results')">クイズ成績</a>
+        </div>
+    
+        <!-- 新しいコンテンツ領域 -->
+        <div class="content" id="content">
+            <div id="assignments" style="display: none;">
+                <h2>課題提出状況</h2>
+                <div id="assignment-list"></div>
+            </div>
+    
+            <div id="schedule" style="display: none;">
+                <h2>7月のスケジュール</h2>
+                <div class="calendar" id="calendar"></div>
+            </div>
+    
+            <div id="quiz-results" style="display: none;">
+                <h2>クイズ成績</h2>
+                <div id="quiz-result-list"></div>
+            </div>
+        </div>
+    
+        <script>
+            // サイドバーの切り替え
+            function toggleSidebar() {
+                document.getElementById("sidebar").classList.toggle("active");
+                document.getElementById("content").classList.toggle("active");
+            }
+    
+            // コンテンツの表示切り替え
+            function showContent(contentId) {
+                const contents = ['assignments', 'schedule', 'quiz-results'];
+                contents.forEach(id => {
+                    document.getElementById(id).style.display = id === contentId ? 'block' : 'none';
+                });
+            }
+    
+            // 課題リストの生成
+            function generateAssignments() {
+                const assignments = [
+                    { name: "国語レポート", dueDate: "2024-07-15", completed: false },
+                    { name: "算数ドリル", dueDate: "2024-07-10", completed: false },
+                    { name: "理科実験レポート", dueDate: "2024-07-20", completed: false }
+                ];
+    
+                const assignmentList = document.getElementById("assignment-list");
+                assignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    
+                assignments.forEach(assignment => {
+                    const div = document.createElement("div");
+                    div.className = "assignment";
+                    div.innerHTML = `
+                        <h3>${assignment.name}</h3>
+                        <p>提出期限: ${assignment.dueDate}</p>
+                        <button onclick="toggleCompletion(this)">${assignment.completed ? '完了' : '未完了'}</button>
+                    `;
+                    assignmentList.appendChild(div);
+                });
+            }
+    
+            // 課題の完了状態の切り替え
+            function toggleCompletion(button) {
+                button.textContent = button.textContent === '未完了' ? '完了' : '未完了';
+            }
+    
+            // カレンダーの生成
+            function generateCalendar() {
+                const calendar = document.getElementById("calendar");
+                const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+    
+                // 曜日のヘッダーを追加
+                daysOfWeek.forEach(day => {
+                    const div = document.createElement("div");
+                    div.className = "calendar-day header";
+                    div.textContent = day;
+                    calendar.appendChild(div);
+                });
+    
+                // 7月の日付を追加（例として2024年7月を使用）
+                const july2024 = new Date(2024, 6, 1);
+                const daysInJuly = new Date(2024, 7, 0).getDate();
+    
+                for (let i = 0; i < july2024.getDay(); i++) {
+                    calendar.appendChild(document.createElement("div"));
+                }
+    
+                for (let i = 1; i <= daysInJuly; i++) {
+                    const div = document.createElement("div");
+                    div.className = "calendar-day";
+                    div.textContent = i;
+                    calendar.appendChild(div);
+                }
+            }
+    
+            // クイズ成績の表示
+            function showQuizResults() {
+                const quizResultList = document.getElementById("quiz-result-list");
+                const result = document.getElementById("overall-result");
+                const teacherComment = document.getElementById("teacher-comment");
+    
+                if (result && teacherComment) {
+                    const div = document.createElement("div");
+                    div.className = "quiz-result";
+                    div.innerHTML = `
+                        <h3>最新のクイズ結果</h3>
+                        <p>${result.textContent}</p>
+                        <p>${teacherComment.textContent}</p>
+                    `;
+                    quizResultList.appendChild(div);
+                } else {
+                    quizResultList.innerHTML = "<p>まだクイズを解いていません。</p>";
+                }
+            }
+    
+            // ページ読み込み時に実行
+            window.onload = function() {
+                generateAssignments();
+                generateCalendar();
+                showQuizResults();
+            };
+        </script>
+        <section class="weekly-schedule">
+            <h2>今週の予定</h2>
+            <div class="schedule-content">
+
+
+                <div class="schedule-day">
+                    <h3>月曜日</h3>
+                    <p>2時間目：国語（漢字テスト）</p>
+                    <p>4時間目：算数（分数の計算）</p>
+                    <p>放課後：クラブ活動</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>火曜日</h3>
+                    <p>1時間目：理科（実験：植物の観察）</p>
+                    <p>3時間目：図工（絵画制作）</p>
+                    <p>5時間目：体育（バスケットボール）</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>水曜日</h3>
+                    <p>朝の会：全校集会</p>
+                    <p>3時間目：社会科見学（地域の歴史博物館）</p>
+                    <p>5時間目：委員会活動</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>木曜日</h3>
+                    <p>1時間目：英語（ALTの先生と）</p>
+                    <p>3時間目：音楽（合唱練習）</p>
+                    <p>6時間目：学級会（文化祭の出し物決め）</p>
+                </div>
+                <div class="schedule-day">
+                    <h3>金曜日</h3>
+                    <p>2時間目：体育（水泳）</p>
+                    <p>4時間目：国語（作文発表会）</p>
+                    <p>放課後：大掃除</p>
+                </div>
+                
+
+
+            </div>
+        </section>
+        <section class="announcements">
+            <h2>係のお知らせ</h2>
+            <div class="announcement-container">
+                <div class="announcement-scroll">
+                    <div class="announcement">
+                        <h3>レク係</h3>
+                        <p>今週の金曜日に学級レクリエーションを行います。体育館に集合してください。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>給食係</h3>
+                        <p>来週からの給食当番表を教室後方に掲示しました。確認をお願いします。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>図書係</h3>
+                        <p>図書室の本の返却日は明日までです。忘れずに返却してください。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>掃除係</h3>
+                        <p>今週の掃除当番は廊下グループです。掃除道具の確認をお願いします。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>環境係</h3>
+                        <p>ゴミの分別にご協力ください。リサイクルボックスを教室に設置しました。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>保健係</h3>
+                        <p>手洗い・うがいを忘れずに。風邪の予防に努めましょう。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>飼育係</h3>
+                        <p>学級ペットのハムスターのえさやり当番表を更新しました。</p>
+                    </div>
+                    <div class="announcement">
+                        <h3>装飾係</h3>
+                        <p>文化祭の装飾テーマが決まりました。アイデアを募集中です。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="quiz">
+            <h2>クイズに挑戦しよう！</h2>
+            <div class="question-container" id="q1-container">
+                <p class="question">1. 水の沸点は何度でしょう？</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q1" value="a">
+                        90度
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="b">
+                        100度
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="c">
+                        110度
+                    </label>
+                </div>
+                <p class="result" id="q1-result"></p>
+            </div>
+            <div class="question-container" id="q2-container">
+                <p class="question">2. 地球はどの惑星の近くにありますか？</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q2" value="a">
+                        金星と火星
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="b">
+                        木星と土星
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="c">
+                        海王星と冥王星
+                    </label>
+                </div>
+                <p class="result" id="q2-result"></p>
+            </div>
+            <div class="question-container" id="q3-container">
+                <p class="question">3. 光の速度はどれくらいでしょう？</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q3" value="a">
+                        約300,000 km/s
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="b">
+                        約150,000 km/s
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="c">
+                        約450,000 km/s
+                    </label>
+                </div>
+                <p class="result" id="q3-result"></p>
+            </div>
+            <div class="question-container" id="q4-container">
+                <p class="question">4. 酸素の化学記号は何ですか？</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q4" value="a">
+                        O
+                    </label>
+                    <label>
+                        <input type="radio" name="q4" value="b">
+                        C
+                    </label>
+                    <label>
+                        <input type="radio" name="q4" value="c">
+                        N
+                    </label>
+                </div>
+                <p class="result" id="q4-result"></p>
+            </div>
+            <div class="question-container" id="q5-container">
+                <p class="question">5. 人間の体の約何パーセントが水で構成されていますか？</p>
+                <div class="answers">
+                    <label>
+                        <input type="radio" name="q5" value="a">
+                        50%
+                    </label>
+                    <label>
+                        <input type="radio" name="q5" value="b">
+                        60%
+                    </label>
+                    <label>
+                        <input type="radio" name="q5" value="c">
+                        70%
+                    </label>
+                </div>
+                <p class="result" id="q5-result"></p>
+            </div>
+            <button onclick="checkAnswers()">答え合わせ</button>
+            <p id="overall-result"></p>
+            <p id="teacher-comment"></p>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 理科クイズ</p>
+    </footer>
+    <script>
+        function checkAnswers() {
+            const answers = {
+                q1: 'b',
+                q2: 'a',
+                q3: 'a',
+                q4: 'a',
+                q5: 'b'
+            };
+
+            const explanations = {
+                q1: '水の沸点は100度です。',
+                q2: '地球は金星と火星の間にあります。',
+                q3: '光の速度は約300,000 km/sです。',
+                q4: '酸素の化学記号はOです。',
+                q5: '人間の体の約60%は水で構成されています。'
+            };
+
+            let correctCount = 0;
+
+            for (let i = 1; i <= 5; i++) {
+                const selectedAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+                const resultElement = document.getElementById(`q${i}-result`);
+
+                if (selectedAnswer) {
+                    if (selectedAnswer.value === answers[`q${i}`]) {
+                        resultElement.textContent = `正解です！ ${explanations[`q${i}`]}`;
+                        resultElement.style.color = 'green';
+                        correctCount++;
+                    } else {
+                        resultElement.textContent = `不正解です。 ${explanations[`q${i}`]}`;
+                        resultElement.style.color = 'red';
+                    }
+                }
+
+ else {
+                    resultElement.textContent = '答えを選んでください。';
+                    resultElement.style.color = 'red';
+                }
+            }
+
+            const overallResultElement = document.getElementById('overall-result');
+            overallResultElement.textContent = `あなたは 5 問中 ${correctCount} 問正解しました！`;
+
+            const teacherCommentElement = document.getElementById('teacher-comment');
+            let comment = '齋藤先生からのコメント：';
+
+            const percentage = (correctCount / 5) * 100;
+            if (percentage === 100) {
+                comment += '100%おめでとう！君は理科マスターだね！！';
+            } else if (percentage >= 80) {
+                comment += '素晴らしい！！次は全問正解目指して頑張ろう！';
+            } else if (percentage >= 40) {
+                comment += 'いい感じ！間違った問題を復習して、もう一回解いてみよう！';
+            } else if (percentage >= 20) {
+                comment += '頑張ったね！間違った問題を復習して、もう一回解いてみよう！';
+            } else {
+                comment += '間違った問題を復習して、もう一回解いてみよう！';
+            }
+
+            teacherCommentElement.textContent = comment;
+        }
+    </script>
+</body>
+</html>
